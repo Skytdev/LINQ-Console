@@ -55,6 +55,9 @@ namespace myQ
                     case 10:
                         DisplayMyAny(pokemons);
                         break;
+                    case 11:
+                        DisplayMyAll(pokemons);
+                        break;
                 }
             }
             
@@ -93,7 +96,7 @@ namespace myQ
                 Id = 4,
                 Name = "Raichu",
                 PokemonType = "Elec",
-                IsActive = false
+                IsActive = true
 
             };
 
@@ -258,9 +261,17 @@ namespace myQ
             Console.Clear();
             Console.WriteLine("Vérifie si un type de pokémon est actif, entre le type à tester :");
             string a = Console.ReadLine();
-            bool result = pokemons.MyAny(x => x.PokemonType == a && x.IsActive == true);
+            bool result = pokemons.Any();
             Console.WriteLine("Result : {0}", result ? "Des pokemons sont actifs" : "Des pokemons sont inactifs");
             Console.WriteLine("Press any key to return to Menu");
+            Console.ReadLine();
+        }
+
+        public static void DisplayMyAll(List<Pokemon> pokemons)
+        {
+            Console.Clear();
+            bool result = pokemons.MyAll(x => x.IsActive == true);
+            Console.WriteLine(result);
             Console.ReadLine();
         }
 
@@ -392,12 +403,24 @@ static class Test
 
     public static IEnumerable<T> MyTake<T>(this IEnumerable<T> source, Range range)
     {
-        var myList = source.ToList();
+        var myList = new List<T>();
+        int start = range.Start.Value;
+        int end = range.End.Value;
+        int i = 0;
 
-        var start = range.Start.Value;
-        var end = range.End.Value;
+        while (source.Count() <= end)
+        {
+            T item = source.First();
 
-        return myList.GetRange(start, end);
+            if (i >= start && i <= end)
+            {
+                myList.Add(item);
+            }
+
+            i++;
+            source = source.Skip(1);
+        }
+        return myList;
     }
 
     public static bool MyAny<T>(this IEnumerable<T> source, Func<T, bool> predicate)
@@ -412,4 +435,25 @@ static class Test
         return false;
     }
 
-}   
+    public static bool MyAny<T>(this IEnumerable<T> source)
+    {
+        foreach (var item in source)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public static bool MyAll<T>(this IEnumerable<T> source, Func<T, bool> predicate)
+    {
+        foreach (var item in source)
+        {
+            if (!predicate(item))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+}

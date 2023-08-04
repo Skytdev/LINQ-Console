@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 
 namespace myQ
 {
@@ -51,6 +52,9 @@ namespace myQ
                     case 9:
                         DisplayMyTake(pokemons);
                         break;
+                    case 10:
+                        DisplayMyAny(pokemons);
+                        break;
                 }
             }
             
@@ -63,35 +67,42 @@ namespace myQ
             {
                 Id = 1,
                 Name = "Pikachu",
-                PokemonType = "Elec"
+                PokemonType = "Elec",
+                IsActive = true
             };
 
             var dracaufeu = new Pokemon()
             {
                 Id = 2,
                 Name = "Dracaufeu",
-                PokemonType = "Feu"
+                PokemonType = "Feu",
+                IsActive = true
             };
 
             var smogogo = new Pokemon()
             {
                 Id = 3,
                 Name = "Smogogo",
-                PokemonType = "Poison"
+                PokemonType = "Poison",
+                IsActive = true
+
             };
 
             var raichu = new Pokemon()
             {
                 Id = 4,
                 Name = "Raichu",
-                PokemonType = "Elec"
+                PokemonType = "Elec",
+                IsActive = false
+
             };
 
             var bulbizarre = new Pokemon()
             {
                 Id = 5,
                 Name = "Bulbizarre",
-                PokemonType = "Plante"
+                PokemonType = "Plante",
+                IsActive = true
             };
 
             pokemons = new List<Pokemon>()
@@ -242,7 +253,16 @@ namespace myQ
             Console.ReadLine();
         }
 
-
+        public static void DisplayMyAny(List<Pokemon> pokemons)
+        {
+            Console.Clear();
+            Console.WriteLine("Vérifie si un type de pokémon est actif, entre le type à tester :");
+            string a = Console.ReadLine();
+            bool result = pokemons.MyAny(x => x.PokemonType == a && x.IsActive == true);
+            Console.WriteLine("Result : {0}", result ? "Des pokemons sont actifs" : "Des pokemons sont inactifs");
+            Console.WriteLine("Press any key to return to Menu");
+            Console.ReadLine();
+        }
 
     }   
 }
@@ -380,5 +400,16 @@ static class Test
         return myList.GetRange(start, end);
     }
 
+    public static bool MyAny<T>(this IEnumerable<T> source, Func<T, bool> predicate)
+    {
+        foreach (var item in source)
+        {
+            if (predicate(item))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 
 }   

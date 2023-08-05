@@ -62,6 +62,9 @@ namespace myQ
                     case 12:
                         DisplayMyDisctinctBy(pokemons);
                         break;
+                    case 13:
+                        DisplayMyDisctinct(pokemons);
+                        break;
                 }
             }
             
@@ -114,10 +117,28 @@ namespace myQ
 
             var electhor = new Pokemon()
             {
-                Id = 5,
+                Id = 6,
                 Name = "Électhor",
                 PokemonType = "Electrique",
                 IsActive = true
+            };
+
+            var raichu2 = new Pokemon()
+            {
+                Id = 7,
+                Name = "Raichu",
+                PokemonType = "Electrique",
+                IsActive = true
+
+            };
+
+            var raichu3 = new Pokemon()
+            {
+                Id = 7,
+                Name = "Raichu",
+                PokemonType = "Elec",
+                IsActive = true
+
             };
 
             pokemons = new List<Pokemon>()
@@ -127,7 +148,9 @@ namespace myQ
                 smogogo,
                 raichu,
                 bulbizarre,
-                electhor
+                electhor,
+                raichu2,
+                raichu3
             };
 
             return pokemons;
@@ -293,6 +316,14 @@ namespace myQ
         {
             Console.Clear();
             var result = pokemons.MyDistinctBy(x => x.PokemonType);
+            DisplayPokemons(result);
+            Console.ReadLine();
+        }
+
+        public static void DisplayMyDisctinct(List<Pokemon> pokemons)
+        {
+            Console.Clear();
+            var result = pokemons.MyDistinct(new PokemonComparer());
             DisplayPokemons(result);
             Console.ReadLine();
         }
@@ -480,7 +511,7 @@ static class Test
 
     public static IEnumerable<T> MyDistinctBy<T, TKey>(this IEnumerable<T> source, Func<T, TKey> keySelector)
     {
-        HashSet<TKey> myKeys = new HashSet<TKey>();
+        HashSet<TKey> myHash = new HashSet<TKey>();
         var result = new List<T>();
 
         foreach (var item in source)
@@ -488,7 +519,7 @@ static class Test
 
             TKey key = keySelector(item);
 
-            if (myKeys.Add(key))
+            if (myHash.Add(key))
             {
                 result.Add(item);
             }
@@ -499,10 +530,50 @@ static class Test
 
     public static IEnumerable<T> MyDistinct<T>(this IEnumerable<T> source, IEqualityComparer<T>? comparer)
     {
+        HashSet<T> myHash = new HashSet<T>(comparer);
         var result = new List<T>();
 
-
+        foreach (var item in source)
+        {
+            if (myHash.Add(item))
+            {
+                result.Add(item);
+            }
+        }
         return result;
     }
 
 }
+
+class PokemonComparer : IEqualityComparer<Pokemon>
+{
+    public bool Equals(Pokemon x, Pokemon y)
+    {
+        //Check whether the compared objects reference the same data.
+        if (Object.ReferenceEquals(x, y)) return true;
+
+        //Check whether any of the compared objects is null.
+        if (Object.ReferenceEquals(x, null) || Object.ReferenceEquals(y, null))
+            return false;
+
+        //Check whether the pokemon properties are equal.
+        return x.PokemonType == y.PokemonType && x.Name == y.Name;
+    }
+
+
+    public int GetHashCode(Pokemon Pokemon)
+    {
+        //Check whether the object is null
+        if (Object.ReferenceEquals(Pokemon, null)) return 0;
+
+        //Get hash code for the Name field if it is not null.
+        int hashProductName = Pokemon.Name == null ? 0 : Pokemon.Name.GetHashCode();
+
+        //Get hash code for the Type field.
+        int hashProductType = Pokemon.PokemonType.GetHashCode();
+
+        //Calculate the hash code for the pokemon.
+        return hashProductName ^ hashProductType;
+    }
+}
+

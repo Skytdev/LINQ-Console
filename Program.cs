@@ -65,6 +65,9 @@ namespace myQ
                     case 13:
                         DisplayMyDisctinct(pokemons);
                         break;
+                    case 14:
+                        DisplayMyOrderBy(pokemons);
+                        break;
                 }
             }
             
@@ -86,7 +89,7 @@ namespace myQ
                 Id = 2,
                 Name = "Dracaufeu",
                 PokemonType = "Feu",
-                IsActive = true
+                IsActive = false
             };
 
             var smogogo = new Pokemon()
@@ -100,7 +103,7 @@ namespace myQ
 
             var raichu = new Pokemon()
             {
-                Id = 4,
+                Id = 2,
                 Name = "Raichu",
                 PokemonType = "Electrique",
                 IsActive = true
@@ -109,10 +112,10 @@ namespace myQ
 
             var bulbizarre = new Pokemon()
             {
-                Id = 5,
+                Id = 1,
                 Name = "Bulbizarre",
                 PokemonType = "Plante",
-                IsActive = true
+                IsActive = false
             };
 
             var electhor = new Pokemon()
@@ -134,7 +137,7 @@ namespace myQ
 
             var raichu3 = new Pokemon()
             {
-                Id = 7,
+                Id = 8,
                 Name = "Raichu",
                 PokemonType = "Elec",
                 IsActive = true
@@ -328,7 +331,16 @@ namespace myQ
             Console.ReadLine();
         }
 
-    }   
+        public static void DisplayMyOrderBy(List<Pokemon> pokemons)
+        {
+            Console.Clear();
+            var result = pokemons.OrderBy(x => x.Id);
+            DisplayPokemons(result);
+            Console.ReadLine();
+        }
+
+
+    }
 }
 
 static class Test
@@ -543,6 +555,27 @@ static class Test
         return result;
     }
 
+    //public static IOrderedEnumerable<T> MyOrderBy<T, TKey>(this IEnumerable<T> source, Func<T, TKey> keySelector)
+    //{
+    //    var result = new List<T>();
+
+    //    foreach (var item in source)
+    //    {
+            
+    //    }
+
+
+    //    return (IOrderedEnumerable <T>)result;
+    //}
+
+    public static bool TestT<T>(T a, T b)
+    {
+        if (a > b)
+        {
+            return true;
+        }
+        return false;
+    }
 }
 
 class PokemonComparer : IEqualityComparer<Pokemon>

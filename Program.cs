@@ -1,4 +1,5 @@
-﻿using System;
+﻿using myQ;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -58,6 +59,9 @@ namespace myQ
                     case 11:
                         DisplayMyAll(pokemons);
                         break;
+                    case 12:
+                        DisplayMyDisctinctBy(pokemons);
+                        break;
                 }
             }
             
@@ -70,7 +74,7 @@ namespace myQ
             {
                 Id = 1,
                 Name = "Pikachu",
-                PokemonType = "Elec",
+                PokemonType = "Electrique",
                 IsActive = true
             };
 
@@ -95,7 +99,7 @@ namespace myQ
             {
                 Id = 4,
                 Name = "Raichu",
-                PokemonType = "Elec",
+                PokemonType = "Electrique",
                 IsActive = true
 
             };
@@ -108,13 +112,22 @@ namespace myQ
                 IsActive = true
             };
 
+            var electhor = new Pokemon()
+            {
+                Id = 5,
+                Name = "Électhor",
+                PokemonType = "Electrique",
+                IsActive = true
+            };
+
             pokemons = new List<Pokemon>()
             {
                 pikachu,
                 dracaufeu,
                 smogogo,
                 raichu,
-                bulbizarre
+                bulbizarre,
+                electhor
             };
 
             return pokemons;
@@ -145,10 +158,11 @@ namespace myQ
             Console.WriteLine("----   9    MyTake");
             Console.WriteLine("----   10   MyAny");
             Console.WriteLine("----   11   MyAll");
-            Console.WriteLine("----   12   MyDistinct");
-            Console.WriteLine("----   13   MyOrderBy");
-            Console.WriteLine("----   14   MyGroupBy");
-            Console.WriteLine("----   15    Exit");
+            Console.WriteLine("----   12   MyDistinctBy");
+            Console.WriteLine("----   13   MyDistinct");
+            Console.WriteLine("----   14   MyOrderBy");
+            Console.WriteLine("----   15   MyGroupBy");
+            Console.WriteLine("----   16    Exit");
             Console.WriteLine("------------------------------------------------------------------------");
             menuChoice = Convert.ToInt32(Console.ReadLine());
         }
@@ -272,6 +286,14 @@ namespace myQ
             Console.Clear();
             bool result = pokemons.MyAll(x => x.IsActive == true);
             Console.WriteLine(result);
+            Console.ReadLine();
+        }
+
+        public static void DisplayMyDisctinctBy(List<Pokemon> pokemons)
+        {
+            Console.Clear();
+            var result = pokemons.MyDistinctBy(x => x.PokemonType);
+            DisplayPokemons(result);
             Console.ReadLine();
         }
 
@@ -454,6 +476,33 @@ static class Test
             }
         }
         return true;
+    }
+
+    public static IEnumerable<T> MyDistinctBy<T, TKey>(this IEnumerable<T> source, Func<T, TKey> keySelector)
+    {
+        HashSet<TKey> myKeys = new HashSet<TKey>();
+        var result = new List<T>();
+
+        foreach (var item in source)
+        {
+
+            TKey key = keySelector(item);
+
+            if (myKeys.Add(key))
+            {
+                result.Add(item);
+            }
+        }
+
+        return result;
+    }
+
+    public static IEnumerable<T> MyDistinct<T>(this IEnumerable<T> source, IEqualityComparer<T>? comparer)
+    {
+        var result = new List<T>();
+
+
+        return result;
     }
 
 }

@@ -25,6 +25,7 @@
 //pokemons.Take
 //pokemons.Any
 //pokemons.All
+//pokemons.DistinctBy
 //pokemons.Distinct
 //pokemons.OrderBy
 //pokemons.GroupBy
